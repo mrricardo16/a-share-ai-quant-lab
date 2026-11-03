@@ -96,7 +96,7 @@ def run(source: str, symbol: str, start: str, end: str) -> dict[str, Any]:
         within = data[data["date"].between(d1, d2)]
         metrics["rows_in_requested_window"] = int(len(within))
         metrics["basic_bar_checks_passed"] = metrics["basic_bar_checks_passed"] and len(within) > 0
-        result.update({"status": "ok", "metrics": metrics})
+        result.update({"status": "ok" if metrics["basic_bar_checks_passed"] else "invalid", "metrics": metrics})
     except Exception as exc:
         result.update({"status": "error", "error_type": type(exc).__name__, "message": str(exc)[:500]})
     return result

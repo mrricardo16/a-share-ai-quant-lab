@@ -28,6 +28,7 @@
 - [验收标准](doc/09-acceptance-criteria.md)
 - [开源项目调研](doc/research/open-source-landscape.md)
 - [V0.1 技术预研与测试记录](doc/research/poc-2026-11-03.md)
+- [引擎基准与测试结果](doc/research/engine-benchmark.md)
 - [数据接口探针运行说明](poc/README.md)
 - [架构决策记录](doc/adr/README.md)
 

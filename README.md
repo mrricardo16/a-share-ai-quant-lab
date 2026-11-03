@@ -27,6 +27,8 @@
 - [开发路线图](doc/08-development-roadmap.md)
 - [验收标准](doc/09-acceptance-criteria.md)
 - [开源项目调研](doc/research/open-source-landscape.md)
+- [V0.1 技术预研与测试记录](doc/research/poc-2026-11-03.md)
+- [数据接口探针运行说明](poc/README.md)
 - [架构决策记录](doc/adr/README.md)
 
 ## 工程原则
@@ -40,7 +42,7 @@
 
 ## 状态
 
-- 当前：只建立 GitHub 文档骨架；未实现量化引擎。
+- 当前：文档骨架 + ETF 数据源只读探针；离线测试已通过 5 项；真实行情接口与回测框架尚未在线验证，未实现量化引擎。
 - V0.1 的回测引擎（Backtrader / RQAlpha）和 ETF 行情供应商尚未选型完成。
 - 默认采用 Python；初期 SQLite + Parquet；.NET/Vue3 仅为后期扩展。
 

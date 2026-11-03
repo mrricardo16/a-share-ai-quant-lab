@@ -1,0 +1,4 @@
+# PoC-only dependencies; freeze exact versions after successful online validation
+akshare
+pandas>=2.1,<3
+pytest>=8,<10

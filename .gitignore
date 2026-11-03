@@ -23,7 +23,7 @@ build/
 data/
 datasets/
 artifacts/
-reports/generated/
+reports/
 *.sqlite
 *.sqlite3
 *.db

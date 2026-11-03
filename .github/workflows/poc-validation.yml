@@ -66,3 +66,16 @@ jobs:
           name: etf-data-probe
           path: reports/*.json
           if-no-files-found: warn
+
+  backtrader-timing-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Backtrader test dependencies
+        run: python -m pip install "pandas>=2.1,<3" "pytest>=8,<10" backtrader
+      - name: Verify next-session fill timing with synthetic bars
+        run: python -m pytest poc/engine/test_backtrader_smoke.py -q

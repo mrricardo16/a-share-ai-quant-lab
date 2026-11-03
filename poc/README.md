@@ -37,3 +37,6 @@ python poc/data/etf_source_probe.py --symbol 510050 --source em --start 20240101
 - **ADR**：实测后更新 doc/adr/ADR-002-backtest-engine.md 并选择引擎。
 
 当前执行环境无法访问公网安装依赖，实际联网和框架运行测试均标记为**待验证**；参见 doc/research/poc-2026-11-03.md。
+## 5. 引擎基准与 CI
+
+参见 [独立参考账本说明](engine/README.md) 和 [引擎对照结果](../doc/research/engine-benchmark.md)。所有交易价格为合成测试数据；Backtrader、RQAlpha 和真实 ETF 数据的最终比较仍需在线验证。

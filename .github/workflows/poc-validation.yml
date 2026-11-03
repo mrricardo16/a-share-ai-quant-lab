@@ -1,0 +1,68 @@
+name: ETF PoC validation
+
+on:
+  push:
+    paths:
+      - "poc/**"
+      - ".github/workflows/poc-validation.yml"
+  workflow_dispatch:
+    inputs:
+      live_data:
+        description: "Explicitly run read-only calls against public ETF data providers"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install offline test dependencies
+        run: python -m pip install "pandas>=2.1,<3" "pytest>=8,<10"
+      - name: Run offline data and reference-ledger tests
+        run: python -m pytest poc/data/test_etf_source_probe.py poc/engine/test_reference_ledger.py -q
+      - name: Compile PoC Python
+        run: python -m compileall -q poc
+
+  live-etf-data-probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.live_data
+    needs: offline-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install AKShare dependencies
+        run: python -m pip install -r poc/requirements-data.txt
+      - name: Probe Sina and Eastmoney (read-only, one ETF each)
+        shell: bash
+        run: |
+          mkdir -p reports
+          set +e
+          python poc/data/etf_source_probe.py --source sina --symbol 510050 --output reports/sina-510050.json
+          sina_code=$?
+          sleep 5
+          python poc/data/etf_source_probe.py --source em --symbol 510050 --output reports/em-510050.json
+          em_code=$?
+          set -e
+          echo "Sina exit=$sina_code; Eastmoney exit=$em_code"
+          if [[ "$sina_code" -ne 0 || "$em_code" -ne 0 ]]; then
+            echo "A data provider failed. Read the uploaded per-provider JSON artifacts."
+            exit 1
+          fi
+      - name: Upload probe artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: etf-data-probe
+          path: reports/*.json
+          if-no-files-found: warn

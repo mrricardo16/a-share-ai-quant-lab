@@ -41,3 +41,12 @@ def test_reject_duplicate_and_bad_price():
 def test_required_columns():
     with pytest.raises(ValueError, match="missing required"):
         normalize_and_check(pd.DataFrame({"date": ["2026-10-30"]}), "sina")
+
+
+def test_empty_result_not_success(monkeypatch):
+    import etf_source_probe as module
+    monkeypatch.setattr(module, "request_data", lambda *args: pd.DataFrame({
+        "date": [], "open": [], "high": [], "low": [], "close": [], "volume": []
+    }))
+    result = module.run("sina", "510050", "20240101", "20261030")
+    assert result["status"] == "invalid"
